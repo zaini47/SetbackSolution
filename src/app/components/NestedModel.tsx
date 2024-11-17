@@ -18,7 +18,6 @@ const style = {
     alignItems: 'center',
     gap: '10px',
     padding: '1.25rem',
-    overflow: 'auto',
 };
 
 interface NestedModalProps {
@@ -54,7 +53,7 @@ const inputStyle = {
 const rowInputStyle = {
     display: 'flex',
     gap: '1rem',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
 };
 
 const ChildModal: React.FC<ChildModalProps> = ({ isOpenChild, onCloseChild }) => {
@@ -98,11 +97,11 @@ const ChildModal: React.FC<ChildModalProps> = ({ isOpenChild, onCloseChild }) =>
                     <Box sx={rowInputStyle}>
                         <div>
                             <p className="uppercase Arimo text-[12px] text-[#3F3F3F]">Expiration Date</p>
-                            <TextField sx={{ ...inputStyle, flex: 1 }} placeholder="MM / YY" variant="outlined" />
+                            <TextField sx={{ ...inputStyle, flex: 1, width: '100%' }} placeholder="MM / YY" variant="outlined" />
                         </div>
                         <div>
                             <p className="uppercase Arimo text-[12px] text-[#3F3F3F]">CVC</p>
-                            <TextField sx={{ ...inputStyle, flex: 1 }} placeholder="CVC" variant="outlined" />
+                            <TextField sx={{ ...inputStyle, flex: 1, width: '100%' }} placeholder="CVC" variant="outlined" />
                         </div>
                     </Box>
                 </Box>
@@ -147,7 +146,6 @@ const NestedModal: React.FC<NestedModalProps> = ({ isOpen, onClose }) => {
                 sx={{
                     ...style,
                     width: { xs: '90%', sm: '80%', md: '70%', lg: '80%' },
-                    overflow: 'scroll',
                 }}
             >
                 <Box
