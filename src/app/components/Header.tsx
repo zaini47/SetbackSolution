@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import NestedModal from './NestedModel';
+import Image from 'next/image';
 
 const Header = () => {
     const [showNextForm, setShowNextForm] = useState(false);
@@ -53,10 +54,11 @@ const Header = () => {
                             initialValues={{ name: '', phone: '', whatsapp: '', email: '' }}
                             validationSchema={initialFormSchema}
                             onSubmit={(values) => {
+                                console.log(values)
                                 setShowNextForm(true);
                             }}
                         >
-                            {({ errors, touched }) => (
+                            {() => (
                                 <Form className="space-y-4 bg-[#f9f8f4] p-6 rounded-[20px] shadow-lg">
                                     {['name', 'phone', 'whatsapp', 'email'].map((field) => (
                                         <div key={field}>
@@ -176,7 +178,9 @@ const Header = () => {
                                                     <div>
                                                         {fraudImagePreview && (
                                                             <div className="py-2 px-3 flex justify-center items-center rounded-full bg-white space-x-4 w-fit">
-                                                                <img
+                                                                <Image
+                                                                    width={1000}
+                                                                    height={1000}
                                                                     src={fraudImagePreview}
                                                                     alt="Fraud Attachment Preview"
                                                                     className="w-8 h-8 object-cover rounded-full"
@@ -254,7 +258,9 @@ const Header = () => {
                                                     <div className=''>
                                                         {complaintImagePreview && (
                                                             <div className="py-2 px-3 flex justify-center items-center rounded-full bg-white space-x-4 w-fit">
-                                                                <img
+                                                                <Image
+                                                                    width={1000}
+                                                                    height={1000}
                                                                     src={complaintImagePreview}
                                                                     alt="Complaint Attachment Preview"
                                                                     className="w-8 h-8 object-cover rounded-full"

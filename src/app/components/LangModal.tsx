@@ -15,8 +15,9 @@ const style = {
 export default function LangModal() {
     const [open, setOpen] = React.useState(true);
     const [language, setLanguage] = React.useState('en');
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    // const handleOpen = () => setOpen(true);
+    // const handleClose = () => setOpen(false);
+    console.log(language)
 
     // Function to handle language change
     const handleLanguageChange = (lang: string) => {
