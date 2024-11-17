@@ -54,7 +54,6 @@ const inputStyle = {
 const rowInputStyle = {
     display: 'flex',
     gap: '1rem',
-    flexWrap: 'wrap',
 };
 
 const ChildModal: React.FC<ChildModalProps> = ({ isOpenChild, onCloseChild }) => {
