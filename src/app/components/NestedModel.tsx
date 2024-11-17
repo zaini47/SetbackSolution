@@ -75,7 +75,7 @@ const ChildModal: React.FC<ChildModalProps> = ({ isOpenChild, onCloseChild }) =>
             <Box
                 sx={{
                     ...style,
-                    width: { xs: '90%', sm: '60%', md: '50%' },
+                    width: { xs: '90%', sm: '60%', md: 'fit-content' },
                 }}
                 className="!bg-white !flex-col !items-start rounded-[32.178px]"
             >
