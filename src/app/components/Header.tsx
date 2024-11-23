@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import NestedModal from './NestedModel';
 import Image from 'next/image';
 
-const Header = () => {
+const Header = ( Id : any) => {
     const [showNextForm, setShowNextForm] = useState(false);
     const [showFraudAttachment, setShowFraudAttachment] = useState(false);
     const [showComplaintAttachment, setShowComplaintAttachment] = useState(false);
@@ -14,6 +14,8 @@ const Header = () => {
     // States for storing image previews
     const [fraudImagePreview, setFraudImagePreview] = useState<string | null>(null);
     const [complaintImagePreview, setComplaintImagePreview] = useState<string | null>(null);
+    const [fraudselected, setFraudselected] = useState('')
+    const [fraudselected2, setFraudselected2] = useState('')
 
     // Validation schemas for both forms
     const initialFormSchema = Yup.object().shape({
@@ -27,11 +29,30 @@ const Header = () => {
         cityResidence: Yup.string().required('City of residence is required'),
         oppositeCityResidence: Yup.string().required('Opposite city is required'),
         incidentCity: Yup.string().required('Incident city is required'),
-        additionalInfo: Yup.string().required('Additional information is required'),
+        additionalInfo: Yup.string(),
     });
 
+
+    const options = [
+        { label: 'Online Fraud', value: 'fraud' },
+        { label: 'Others', value: 'others' },
+    ];
+
+    const options2 = [
+        { label: 'Yes', value: 'yes' },
+        { label: 'No', value: 'no' },
+    ];
+
+    const handleOptionSelect2 = (option: any) => {
+        setFraudselected2(option?.value)
+    };
+
+    const handleOptionSelect = (option: any) => {
+        setFraudselected(option?.value)
+    };
+
     return (
-        <div className="w-4/5 max-md:w-full md:w-[90%] flex flex-col justify-center mx-auto">
+        <div id={Id} className="w-4/5 max-md:w-full md:w-[90%] flex flex-col justify-center mx-auto">
             <section className="flex flex-col lg:flex-row justify-between items-center py-20 max-md:py-5 gap-7">
                 <div className="flex-1 max-md:px-6">
                     <h1 className="max-md:text-[64px] max-md:text-center md:text-[80px] lg:text-[100px] xl:text-[124px] font-normal text-[#c8a164] leading-snug">
@@ -46,7 +67,7 @@ const Header = () => {
                 </div>
 
                 <div className="max-w-[90%] xl:max-w-[40%] w-full">
-                    <h2 className="text-[20px] md:text-[24px] lg:text-[28px] font-semibold text-[#c8a164] mb-3">
+                    <h2 className="text-[20px] md:text-[24px] ps-10 lg:text-[28px] font-semibold text-[#c8a164] mb-3">
                         Legal Suggestion Form
                     </h2>
                     {!showNextForm ? (
@@ -54,22 +75,21 @@ const Header = () => {
                             initialValues={{ name: '', phone: '', whatsapp: '', email: '' }}
                             validationSchema={initialFormSchema}
                             onSubmit={(values) => {
-                                console.log(values)
                                 setShowNextForm(true);
                             }}
                         >
                             {() => (
-                                <Form className="space-y-4 bg-[#f9f8f4] p-6 rounded-[20px] shadow-lg">
+                                <Form className="space-y-4 bg-[#f9f8f4] p-5 rounded-[20px] shadow-lg">
                                     {['name', 'phone', 'whatsapp', 'email'].map((field) => (
                                         <div key={field}>
-                                            <label className="block text-[16px] md:text-[18px] font-normal text-[#3f3f3f]">
+                                            <label className="block text-[16px] ps-[20px] md:text-[18px] font-normal text-[#3f3f3f]">
                                                 {field.charAt(0).toUpperCase() + field.slice(1)}
                                             </label>
                                             <Field
                                                 type={field === 'email' ? 'email' : 'text'}
                                                 name={field}
                                                 placeholder={`Your ${field.charAt(0).toUpperCase() + field.slice(1)}`}
-                                                className={`mt-1 p-3 w-full border border-[#CED4DA] rounded-full outline-none`}
+                                                className={`mt-1 py-3 px-5 w-full border border-[#CED4DA] rounded-full outline-none`}
                                             />
                                             <ErrorMessage
                                                 name={field}
@@ -99,26 +119,25 @@ const Header = () => {
                             }}
                             validationSchema={additionalFormSchema}
                             onSubmit={(values) => {
-                                console.log(values);
                                 setIsModalOpen(true);
                             }}
                         >
                             {({ errors, touched, setFieldValue }) => (
-                                <Form className="space-y-4 bg-[#f9f8f4] p-6 rounded-[20px] shadow-lg">
+                                <Form className="space-y-4 bg-[#f9f8f4] p-5 rounded-[20px] shadow-lg">
                                     {[
                                         { name: 'cityResidence', label: 'City of Residence' },
                                         { name: 'oppositeCityResidence', label: 'Opposite Party’s City of Residence' },
                                         { name: 'incidentCity', label: 'Case or Incident Happened in City' },
                                     ].map(({ name, label }) => (
                                         <div key={name}>
-                                            <label className="block text-[16px] md:text-[18px] font-normal text-[#3f3f3f]">
+                                            <label className="block text-[16px] ps-[20px] md:text-[18px] font-normal text-[#3f3f3f]">
                                                 {label}
                                             </label>
                                             <Field
                                                 type="text"
                                                 name={name}
                                                 placeholder={label}
-                                                className={`mt-1 p-3 w-full border border-[#CED4DA] rounded-full outline-none`}
+                                                className={`mt-1 py-3 px-5 w-full border border-[#CED4DA] rounded-full outline-none`}
                                             />
                                             <ErrorMessage
                                                 name={name}
@@ -130,26 +149,15 @@ const Header = () => {
 
                                     {/* Fraud attachment section */}
                                     <div>
-                                        <label className="block text-[16px] md:text-[18px] font-normal text-[#3f3f3f]">Online Fraud or Others</label>
-                                        <button
-                                            type="button"
-                                            className="my-1 p-3 w-full border border-[#CED4DA] bg-[#FFF] rounded-full flex justify-between items-center"
-                                            onClick={() => setShowFraudAttachment((prev) => !prev)}
-                                        >
-                                            <div>
-                                                <p className='text-[#626a7b9f]'>Online Fraud or Others</p>
-                                            </div>
-                                            <div>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="9" viewBox="0 0 16 9" fill="none">
-                                                    <path d="M14.5947 0.219778L8 6.81453L1.40525 0.219778C1.11237 -0.0730967 0.637623 -0.0730967 0.344748 0.219778C0.0518728 0.512653 0.0518728 0.987403 0.344748 1.28028L7.46975 8.40528C7.61637 8.5519 7.808 8.62503 8 8.62503C8.192 8.62503 8.38362 8.5519 8.53025 8.40528L15.6552 1.28028C15.9481 0.987403 15.9481 0.512653 15.6552 0.219778C15.3624 -0.0730967 14.8876 -0.0730967 14.5947 0.219778Z" fill="#3F3F3F" />
-                                                </svg>
-                                            </div>
-                                        </button>
-                                        {showFraudAttachment && (
+                                        <label className="block text-[16px] md:text-[18px] ps-[20px] font-normal text-[#3f3f3f]">Online Fraud or Others</label>
+
+
+                                        <CustomDropdown options={options} onOptionSelect={handleOptionSelect} selectedOption={fraudselected} placeholder={"Online Fraud or Others"} />
+
+                                        {fraudselected && (
                                             <>
                                                 <div className='flex items-center gap-3 mt-5'>
                                                     <div>
-
                                                         <label
                                                             htmlFor="fraud-file"
                                                             className="rounded-[40px] text-white py-[12px] px-[30px] bg-[#CFAC62]"
@@ -210,14 +218,15 @@ const Header = () => {
 
                                     {/* Complaint attachment section */}
                                     <div>
-                                        <label className="block text-[16px] md:text-[18px] font-normal text-[#3f3f3f]">Have You Already Filled Complaint?</label>
-                                        <button
+                                        <label className="block text-[16px] md:text-[18px] ps-[20px] font-normal text-[#3f3f3f] ">Have You Already Filled Complaint?</label>
+                                        <CustomDropdown options={options2} onOptionSelect={handleOptionSelect2} selectedOption={fraudselected2} placeholder={"Have You Already Filled Complaint?"} />
+                                        {/* <button
                                             type="button"
                                             className="mt-1 p-3 w-full border border-[#CED4DA] bg-[#FFF] rounded-full flex justify-between items-center"
                                             onClick={() => setShowComplaintAttachment((prev) => !prev)}
                                         >
                                             <div>
-                                                <p className='text-[#626a7b9f]'>Complaint filed</p>
+                                                <p className='text-[#626a7b9f] px-2'>Complaint filed</p>
                                             </div>
                                             <div>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="9" viewBox="0 0 16 9" fill="none">
@@ -225,8 +234,8 @@ const Header = () => {
                                                 </svg>
                                             </div>
 
-                                        </button>
-                                        {showComplaintAttachment && (
+                                        </button> */}
+                                        {fraudselected2 && (
                                             <>
                                                 <div className='flex items-center gap-3 mt-5'>
                                                     <div>
@@ -286,10 +295,10 @@ const Header = () => {
                                         )}
                                     </div>
 
-                                    <div>
+                                    <div className='mt-2'>
                                         <label
                                             htmlFor="additionalInfo"
-                                            className="block text-[16px] md:text-[18px] font-normal text-[#3f3f3f]"
+                                            className="block text-[16px] ps-[20px] md:text-[18px] font-normal text-[#3f3f3f]"
                                         >
                                             Additional Info
                                         </label>
@@ -298,7 +307,7 @@ const Header = () => {
                                             name="additionalInfo"
                                             id="additionalInfo"
                                             placeholder="Additional info"
-                                            className="mt-1 p-3 w-full border border-[#CED4DA] rounded-[12px] outline-none"
+                                            className="mt-1 pt-3 pb-8 px-5 w-full border border-[#CED4DA] rounded-[12px] outline-none"
                                         />
                                         <ErrorMessage
                                             name="additionalInfo"
@@ -334,3 +343,65 @@ const Header = () => {
 };
 
 export default Header;
+
+
+
+const CustomDropdown = ({ options, onOptionSelect, selectedOption, placeholder }: any) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [value, setValue] = useState(selectedOption); // Initialize with selectedOption
+
+    const toggleDropdown = () => {
+        setIsOpen((prev) => !prev);
+    };
+
+    const handleOptionSelect = (option: any) => {
+        setValue(option.label); // Update the local state with the selected option's label
+        onOptionSelect(option); // Notify parent of the selected option
+        setIsOpen(false); // Close the dropdown
+    };
+
+    return (
+        <div className="relative w-full">
+            {/* Dropdown Button */}
+            <button
+                type="button"
+                className="my-1 p-3 w-full border border-[#CED4DA] bg-[#FFF] rounded-full flex justify-between items-center"
+                onClick={toggleDropdown}
+            >
+                <div>
+                    <p className={`${value ? "text-[#3F3F3F]" : "text-[#626a7b9f]"} px-2`}>{value || placeholder}</p>
+                </div>
+                <div>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="9"
+                        viewBox="0 0 16 9"
+                        fill="none"
+                        className={`transform transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                    >
+                        <path
+                            d="M14.5947 0.219778L8 6.81453L1.40525 0.219778C1.11237 -0.0730967 0.637623 -0.0730967 0.344748 0.219778C0.0518728 0.512653 0.0518728 0.987403 0.344748 1.28028L7.46975 8.40528C7.61637 8.5519 7.808 8.62503 8 8.62503C8.192 8.62503 8.38362 8.5519 8.53025 8.40528L15.6552 1.28028C15.9481 0.987403 15.9481 0.512653 15.6552 0.219778C15.3624 -0.0730967 14.8876 -0.0730967 14.5947 0.219778Z"
+                            fill="#3F3F3F"
+                        />
+                    </svg>
+                </div>
+            </button>
+
+            {/* Dropdown Options */}
+            {isOpen && (
+                <div className="absolute w-full bg-white border border-[#CED4DA] rounded-lg shadow-lg z-10">
+                    {options.map((option: any, index: number) => (
+                        <div
+                            key={index}
+                            onClick={() => handleOptionSelect(option)}
+                            className="p-3 cursor-pointer hover:bg-gray-100 text-[#3F3F3F] first:rounded-t-lg last:rounded-b-lg"
+                        >
+                            {option.label}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};

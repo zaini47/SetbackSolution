@@ -58,16 +58,11 @@ const rowInputStyle = {
 
 const ChildModal: React.FC<ChildModalProps> = ({ isOpenChild, onCloseChild }) => {
     const [open, setOpen] = React.useState(isOpenChild);
-    console.log(open)
 
     React.useEffect(() => {
         setOpen(isOpenChild);
     }, [isOpenChild]);
 
-    // const handleClose = () => {
-    //     setOpen(false);
-    //     onCloseChild(); // Notify parent
-    // };
 
     return (
         <Modal open={isOpenChild} onClose={onCloseChild}>
@@ -76,13 +71,13 @@ const ChildModal: React.FC<ChildModalProps> = ({ isOpenChild, onCloseChild }) =>
                     ...style,
                     width: { xs: '90%', sm: '60%', md: 'fit-content' },
                 }}
-                className="!bg-white !flex-col !items-start rounded-[32.178px]"
+                className="!bg-white !flex-col !items-start rounded-[21.6px] p-2"
             >
                 <Typography
                     variant="h5"
                     sx={{
-                        fontWeight: 'bold',
-                        fontSize: { xs: '30px', sm: '50px', md: '65px' },
+                        fontWeight: 'normal',
+                        fontSize: { xs: '30px', sm: '38px', md: '42px', xl: '65px' },
                         marginBottom: '0.5rem',
                         color: '#3F3F3F',
                     }}
@@ -178,11 +173,11 @@ const NestedModal: React.FC<NestedModalProps> = ({ isOpen, onClose }) => {
                                 setIsModalOpen12(true);
                             }}
                         >
-                            <p className="text-white py-2 px-5 sm:w-fit w-full sm:mx-auto  rounded-[30px] max-md:text-[16px] md:text-[20px] lg:text-[28.638px] bg-[#CFAC62]">
+                            <p className="text-white py-2 px-6 sm:w-fit w-full sm:mx-auto  rounded-[30px] max-md:text-[16px] md:text-[20px] lg:text-[26px] 2xl:text-[28.638px] bg-[#CFAC62]">
                                 {card.title}
                             </p>
-                            <p className="text-[#CFAC62] text-[27px] max-md:text-[16px] md:text-[20px] ">{card.price}</p>
-                            <p className="text-[#3F3F3F] text-[18px] max-md:text-[16px] md:text-[20px] ">{card.description}</p>
+                            <p className="text-[#CFAC62] text-[27px] max-md:text-[16px] md:text-[18px] lg:text-[20px] 2xl:text-[27px]">{card.price}</p>
+                            <p className="text-[#3F3F3F] text-[18px] max-md:text-[16px] md:text-base 2xl:text-[18px] ">{card.description}</p>
                         </Box>
                     ))}
                 </Box>
