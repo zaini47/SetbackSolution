@@ -18,6 +18,12 @@ export default function LangModal() {
     // const handleOpen = () => setOpen(true);
     // const handleClose = () => setOpen(false);
 
+    // not using  /////////////////////
+    const lang = language;
+    console.log(lang)
+    // not using  /////////////////////
+
+
     // Function to handle language change
     const handleLanguageChange = (lang: string) => {
         setLanguage(lang);

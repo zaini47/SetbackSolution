@@ -5,10 +5,26 @@ import * as Yup from 'yup';
 import NestedModal from './NestedModel';
 import Image from 'next/image';
 
-const Header = ( Id : any) => {
+interface Option {
+    label: string;
+    value: string;
+}
+
+interface CustomDropdownProps {
+    options: Option[];
+    onOptionSelect: (option: Option) => void;
+    selectedOption: string;
+    placeholder: string;
+}
+
+interface HeaderProps {
+    Id: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ Id }) => {
     const [showNextForm, setShowNextForm] = useState(false);
-    const [showFraudAttachment, setShowFraudAttachment] = useState(false);
-    const [showComplaintAttachment, setShowComplaintAttachment] = useState(false);
+    // const [showFraudAttachment, setShowFraudAttachment] = useState(false);
+    // const [showComplaintAttachment, setShowComplaintAttachment] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     // States for storing image previews
@@ -43,11 +59,11 @@ const Header = ( Id : any) => {
         { label: 'No', value: 'no' },
     ];
 
-    const handleOptionSelect2 = (option: any) => {
+    const handleOptionSelect2 = (option: Option) => {
         setFraudselected2(option?.value)
     };
 
-    const handleOptionSelect = (option: any) => {
+    const handleOptionSelect = (option: Option) => {
         setFraudselected(option?.value)
     };
 
@@ -74,7 +90,7 @@ const Header = ( Id : any) => {
                         <Formik
                             initialValues={{ name: '', phone: '', whatsapp: '', email: '' }}
                             validationSchema={initialFormSchema}
-                            onSubmit={(values) => {
+                            onSubmit={() => {
                                 setShowNextForm(true);
                             }}
                         >
@@ -118,7 +134,7 @@ const Header = ( Id : any) => {
                                 complaintFile: null,
                             }}
                             validationSchema={additionalFormSchema}
-                            onSubmit={(values) => {
+                            onSubmit={() => {
                                 setIsModalOpen(true);
                             }}
                         >
@@ -346,7 +362,7 @@ export default Header;
 
 
 
-const CustomDropdown = ({ options, onOptionSelect, selectedOption, placeholder }: any) => {
+const CustomDropdown: React.FC<CustomDropdownProps> = ({ options, onOptionSelect, selectedOption, placeholder }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [value, setValue] = useState(selectedOption); // Initialize with selectedOption
 
@@ -354,7 +370,7 @@ const CustomDropdown = ({ options, onOptionSelect, selectedOption, placeholder }
         setIsOpen((prev) => !prev);
     };
 
-    const handleOptionSelect = (option: any) => {
+    const handleOptionSelect = (option: Option) => {
         setValue(option.label); // Update the local state with the selected option's label
         onOptionSelect(option); // Notify parent of the selected option
         setIsOpen(false); // Close the dropdown
@@ -391,7 +407,7 @@ const CustomDropdown = ({ options, onOptionSelect, selectedOption, placeholder }
             {/* Dropdown Options */}
             {isOpen && (
                 <div className="absolute w-full bg-white border border-[#CED4DA] rounded-lg shadow-lg z-10">
-                    {options.map((option: any, index: number) => (
+                    {options.map((option: Option, index: number) => (
                         <div
                             key={index}
                             onClick={() => handleOptionSelect(option)}

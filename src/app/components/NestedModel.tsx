@@ -58,6 +58,7 @@ const rowInputStyle = {
 
 const ChildModal: React.FC<ChildModalProps> = ({ isOpenChild, onCloseChild }) => {
     const [open, setOpen] = React.useState(isOpenChild);
+    console.log(open);
 
     React.useEffect(() => {
         setOpen(isOpenChild);

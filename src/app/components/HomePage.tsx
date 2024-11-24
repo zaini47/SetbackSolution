@@ -10,7 +10,7 @@ import LangModal from './LangModal'
 const HomePage = () => {
     const [activeSection, setActiveSection] = useState('home');
 
-    const handleLinkClick = (id: any) => {
+    const handleLinkClick = (id: string) => {
         const section = document.getElementById(id);
         if (section) {
             section.scrollIntoView({ behavior: 'smooth' });
@@ -38,8 +38,8 @@ const HomePage = () => {
     }, []);
     return (
         <>
+            <LangModal />
             <div className=''>
-                <LangModal />
                 <Navbar activeSection={activeSection} onLinkClick={handleLinkClick} />
                 <Header Id={"home"} />
                 <Body Id={"our-vision"} />

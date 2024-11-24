@@ -2,8 +2,12 @@
 import Image from 'next/image'
 import React, { useState } from 'react'
 import logo from "../../../public/assets/1 1.png"
-
-const Navbar = ({ activeSection, onLinkClick }: any) => {
+// Define types for props
+interface NavbarProps {
+    activeSection: string;
+    onLinkClick: (id: string) => void;
+}
+const Navbar = ({ activeSection, onLinkClick }: NavbarProps) => {
     const [language, setLanguage] = useState('en');
 
     // Function to handle language change

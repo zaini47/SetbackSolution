@@ -3,10 +3,13 @@ import Image from 'next/image'
 import React from 'react'
 import section1 from '../../../public/assets/Image.png'
 
-const Body = (Id: any) => {
-    const scrollID = Id?.Id
+
+interface BodyProps {
+    Id: string;
+}
+const Body: React.FC<BodyProps> = ({ Id }) => {
     return (
-        <div id={scrollID} className='w-4/5 max-md:w-full md:w-[90%] flex flex-col justify-center mx-auto'>
+        <div id={Id} className='w-4/5 max-md:w-full md:w-[90%] flex flex-col justify-center mx-auto'>
             <div className="flex flex-col md:flex-row items-center justify-between py-10 max-md:pt-10 max-md:pb-0 md:py-20 bg-background ">
                 <div className="w-full md:w-1/2 px-4 md:px-0 max-sm:text-center md:text-left max-xl:space-y-6 xl:space-y-6 2xl:space-y-8">
                     <h2 className="text-3xl max-md:text-[42px] md:text-[36px] lg:text-[60px] xl:text-[60px] 2xl:text-[92px] text-[#CFAC62] text-primary font-normal Arimo">
