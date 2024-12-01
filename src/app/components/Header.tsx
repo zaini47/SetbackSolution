@@ -30,13 +30,17 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
     // States for storing image previews
     const [fraudImagePreview, setFraudImagePreview] = useState<string | null>(null);
     const [complaintImagePreview, setComplaintImagePreview] = useState<string | null>(null);
+    const [incidentImagePreview, setIncidentImagePreview] = useState<string | null>(null);
     const [fraudselected, setFraudselected] = useState('')
     const [fraudselected2, setFraudselected2] = useState('')
+    const [incident, setIncident] = useState('')
 
     // Validation schemas for both forms
     const initialFormSchema = Yup.object().shape({
         name: Yup.string().required('Name is required'),
-        phone: Yup.string().required('Phone is required'),
+        phone: Yup.string()
+            .matches(/^\+91\d{10}$/, 'Phone number must be a valid Indian number')
+            .required('Phone is required'),
         whatsapp: Yup.string().required('WhatsApp number is required'),
         email: Yup.string().email('Invalid email').required('Email is required'),
     });
@@ -44,7 +48,6 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
     const additionalFormSchema = Yup.object().shape({
         cityResidence: Yup.string().required('City of residence is required'),
         oppositeCityResidence: Yup.string().required('Opposite city is required'),
-        incidentCity: Yup.string().required('Incident city is required'),
         additionalInfo: Yup.string(),
     });
 
@@ -58,6 +61,10 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
         { label: 'Yes', value: 'yes' },
         { label: 'No', value: 'no' },
     ];
+    const options3 = [
+        { label: 'Case', value: 'case' },
+        { label: 'Incident', value: 'incident' },
+    ];
 
     const handleOptionSelect2 = (option: Option) => {
         setFraudselected2(option?.value)
@@ -66,24 +73,27 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
     const handleOptionSelect = (option: Option) => {
         setFraudselected(option?.value)
     };
+    const handleOptionSelect3 = (option: Option) => {
+        setIncident(option?.value)
+    };
 
     return (
         <div id={Id} className="w-4/5 max-md:w-full md:w-[90%] flex flex-col justify-center mx-auto">
             <section className="flex flex-col lg:flex-row justify-between items-center py-20 max-md:py-5 gap-7">
-                <div className="flex-1 max-md:px-6">
-                    <h1 className="max-md:text-[64px] max-md:text-center md:text-[80px] lg:text-[100px] xl:text-[124px] font-normal text-[#c8a164] leading-snug">
+                <div className="flex-1 max-md:px-6 max-sm:px-3">
+                    <h1 className="max-sm:text-[58px] max-md:text-[64px] max-md:text-center md:text-[80px] lg:text-[100px] xl:text-[124px] font-normal text-[#c8a164] leading-snug">
                         Empowering
                     </h1>
                     <p className="max-md:text-[46px] md:text-[60px] lg:text-[70px] xl:text-[82px] font-normal text-[#c8a164] leading-snug max-md:text-center max-sm:w-full">
                         Legal Clarity
                     </p>
-                    <p className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[22px] text-[#3f3f3f] mt-4">
+                    <p className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[22px] text-[#3f3f3f] mt-4 max-sm:px-2">
                         Your Go-To Platform for Accessible Information and Informed Decisions
                     </p>
                 </div>
 
                 <div className="max-w-[90%] xl:max-w-[40%] w-full">
-                    <h2 className="text-[20px] md:text-[24px] ps-10 lg:text-[28px] font-semibold text-[#c8a164] mb-3">
+                    <h2 className="md:text-[24px] max-md:text-[24px] ps-10 lg:text-[28px] font-semibold text-[#c8a164] mb-3">
                         Legal Suggestion Form
                     </h2>
                     {!showNextForm ? (
@@ -116,7 +126,7 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
                                     ))}
                                     <button
                                         type="submit"
-                                        className="mt-4 w-fit bg-[#c8a164] text-white font-semibold py-3 px-10 rounded-full transition duration-300 hover:bg-[#b29352]"
+                                        className="!mt-6 w-fit bg-[#c8a164] text-white font-semibold py-3 px-10 rounded-full transition duration-300 hover:bg-[#b29352]"
                                     >
                                         Next
                                     </button>
@@ -128,8 +138,8 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
                             initialValues={{
                                 cityResidence: '',
                                 oppositeCityResidence: '',
-                                incidentCity: '',
                                 additionalInfo: '',
+                                incidentCityFile: null,
                                 fraudFile: null,
                                 complaintFile: null,
                             }}
@@ -143,7 +153,6 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
                                     {[
                                         { name: 'cityResidence', label: 'City of Residence' },
                                         { name: 'oppositeCityResidence', label: 'Opposite Party’s City of Residence' },
-                                        { name: 'incidentCity', label: 'Case or Incident Happened in City' },
                                     ].map(({ name, label }) => (
                                         <div key={name}>
                                             <label className="block text-[16px] ps-[20px] md:text-[18px] font-normal text-[#3f3f3f]">
@@ -163,6 +172,74 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
                                         </div>
                                     ))}
 
+                                    {/* Incident attachment section */}
+                                    <div>
+                                        <label className="block text-[16px] md:text-[18px] ps-[20px] font-normal text-[#3f3f3f]">Case or Incident Happened in City</label>
+
+
+                                        <CustomDropdown options={options3} onOptionSelect={handleOptionSelect3} selectedOption={incident} placeholder={"Case or Incident Happened in City"} />
+
+                                        {incident && (
+                                            <>
+                                                <div className='flex items-center gap-3 mt-5'>
+                                                    <div>
+                                                        <label
+                                                            htmlFor="incident-file"
+                                                            className="rounded-[40px] text-white py-[12px] px-[30px] bg-[#CFAC62]"
+                                                            style={{ cursor: 'pointer' }}
+                                                        >
+                                                            Attachment
+                                                        </label>
+                                                        <input
+                                                            type="file"
+                                                            id="incident-file"
+                                                            name="incidentCityFile"
+                                                            onChange={(event) => {
+                                                                const file = event.target.files?.[0]; // Add null check here
+                                                                if (file) {
+                                                                    setFieldValue('incidentCityFile', file);
+                                                                    const reader = new FileReader();
+                                                                    reader.onloadend = () => {
+                                                                        setIncidentImagePreview(reader.result as string);
+                                                                    };
+                                                                    reader.readAsDataURL(file);
+                                                                }
+                                                            }}
+                                                            style={{ display: 'none' }}
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        {incidentImagePreview && (
+                                                            <div className="py-2 px-3 flex justify-center items-center rounded-full bg-white space-x-4 w-fit">
+                                                                <Image
+                                                                    width={1000}
+                                                                    height={1000}
+                                                                    src={incidentImagePreview}
+                                                                    alt="City Attachment Preview"
+                                                                    className="w-8 h-8 object-cover rounded-full"
+                                                                />
+                                                                <button
+                                                                    type="button"
+                                                                    className="text-red-500 text-sm"
+                                                                    onClick={() => {
+                                                                        setIncidentImagePreview(null);
+                                                                        setFieldValue('incidentCityFile', null);
+                                                                    }}
+                                                                >
+                                                                    X
+                                                                </button>
+                                                            </div>
+                                                        )}
+
+                                                    </div>
+
+                                                </div>
+                                                {errors.incidentCityFile && touched.incidentCityFile && (
+                                                    <div className="text-red-500 text-sm">{errors.incidentCityFile}</div>
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
                                     {/* Fraud attachment section */}
                                     <div>
                                         <label className="block text-[16px] md:text-[18px] ps-[20px] font-normal text-[#3f3f3f]">Online Fraud or Others</label>
@@ -385,9 +462,9 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ options, onOptionSelect
                 onClick={toggleDropdown}
             >
                 <div>
-                    <p className={`${value ? "text-[#3F3F3F]" : "text-[#626a7b9f]"} px-2`}>{value || placeholder}</p>
+                    <p className={`${value ? "text-[#3F3F3F]" : "text-[#626a7b9f]"} text-start px-2`}>{value || placeholder}</p>
                 </div>
-                <div>
+                <div className='pe-3'>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"

@@ -15,7 +15,7 @@ const Body: React.FC<BodyProps> = ({ Id }) => {
                     <h2 className="text-3xl max-md:text-[42px] md:text-[36px] lg:text-[60px] xl:text-[60px] 2xl:text-[92px] text-[#CFAC62] text-primary font-normal Arimo">
                         Our Vision
                     </h2>
-                    <p className="mt-4 text-base max-md:text-normal font-normal md:text-xl xl:text-[21px] 2xl:text-[28px] text-justify text-[#3F3F3F] Inter">
+                    <p className="mt-4 text-base max-md:text-normal font-normal md:text-xl xl:text-[21px] 2xl:text-[28px] max-sm:text-center text-justify text-[#3F3F3F] Inter">
                         “To become the go-to platform for accessible legal information and resources, empowering individuals and businesses to make informed decisions without the need for direct consultation.”
                     </p>
                 </div>

@@ -87,7 +87,7 @@ const HomePage = () => {
                 </div>
             </section>
 
-            <div className='mt-2'>
+            <div className='mt-8'>
 
 
                 <div className='w-full flex justify-center items-center gap-3 pt-2 border-t-[1px] border-[#3F3F3F] border-solid'>

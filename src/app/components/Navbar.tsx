@@ -27,7 +27,7 @@ const Navbar = ({ activeSection, onLinkClick }: NavbarProps) => {
                 <div className='flex justify-between max-md:justify-center items-center  py-4'>
                     {/* Logo */}
                     <div>
-                        <Image src={logo} alt='Logo' width={1000} height={1000} className='w-16 h-16 rounded-full' />
+                        <Image src={logo} alt='Logo' width={1000} height={1000} className='w-16 h-16 max-md:w-24  max-md:h-24 rounded-full' />
                     </div>
 
                     {/* Navigation Links and Language Switcher */}
