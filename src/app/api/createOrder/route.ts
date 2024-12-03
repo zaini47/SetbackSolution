@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import Razorpay from "razorpay";
 
-if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
-  throw new Error("Razorpay environment variables are missing");
-}
+// if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+//   throw new Error("Razorpay environment variables are missing");
+// }
+const keyID = process.env.RAZORPAY_KEY_ID;
 const razorpay = new Razorpay({
-  key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID as string, // Use non-prefixed env variables
-  key_secret: process.env.RAZORPAY_KEY_SECRET || '',
+  key_id: keyID as string, // Use non-prefixed env variables
+  key_secret: process.env.RAZORPAY_KEY_SECRET || "",
 });
 
 export async function POST(req: Request) {
@@ -29,7 +30,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ data: order });
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to create Razorpay order", details: (error as Error).message  },
+      {
+        error: "Failed to create Razorpay order",
+        details: (error as Error).message,
+      },
       { status: 500 }
     );
   }
