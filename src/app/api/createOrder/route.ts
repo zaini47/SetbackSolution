@@ -4,9 +4,8 @@ import Razorpay from "razorpay";
 // if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
 //   throw new Error("Razorpay environment variables are missing");
 // }
-const keyID = process.env.RAZORPAY_KEY_ID;
 const razorpay = new Razorpay({
-  key_id: keyID as string, // Use non-prefixed env variables
+  key_id: "rzp_test_hlzuDMDWdxvl6y", // Use non-prefixed env variables
   key_secret: process.env.RAZORPAY_KEY_SECRET || "",
 });
 
