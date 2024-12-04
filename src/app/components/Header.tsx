@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import NestedModal from './NestedModel';
-import Image from 'next/image';
+// import Image from 'next/image';
 
 interface Option {
     label: string;
@@ -23,17 +23,17 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ Id }) => {
     const [showNextForm, setShowNextForm] = useState(false);
-    // const [showFraudAttachment, setShowFraudAttachment] = useState(false);
-    // const [showComplaintAttachment, setShowComplaintAttachment] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false)
 
-    // States for storing image previews
-    const [fraudImagePreview, setFraudImagePreview] = useState<string | null>(null);
-    const [complaintImagePreview, setComplaintImagePreview] = useState<string | null>(null);
-    const [incidentImagePreview, setIncidentImagePreview] = useState<string | null>(null);
+    // const [fraudImagePreview, setFraudImagePreview] = useState<string | null>(null);
+    // const [complaintImagePreview, setComplaintImagePreview] = useState<string | null>(null);
+    // const [incidentImagePreview, setIncidentImagePreview] = useState<string | null>(null);
     const [fraudselected, setFraudselected] = useState('')
     const [fraudselected2, setFraudselected2] = useState('')
     const [incident, setIncident] = useState('')
+    const [incidentFiles, setIncidentFiles] = useState<File[]>([]);
+    const [fraudFiles, setFraudFiles] = useState<File[]>([]);
+    const [complaintFiles, setComplaintFiles] = useState<File[]>([]);
 
     // Validation schemas for both forms
     const initialFormSchema = Yup.object().shape({
@@ -49,8 +49,10 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
         cityResidence: Yup.string().required('City of residence is required'),
         oppositeCityResidence: Yup.string().required('Opposite city is required'),
         additionalInfo: Yup.string(),
+        incidentCityFile: Yup.mixed().required('Incident file is required'),
+        fraudFile: Yup.mixed().required('Fraud file is required'),
+        complaintFile: Yup.mixed().required('Complaint file is required'),
     });
-
 
     const options = [
         { label: 'Online Fraud', value: 'fraud' },
@@ -76,6 +78,23 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
     const handleOptionSelect3 = (option: Option) => {
         setIncident(option?.value)
     };
+
+
+    const handleIncidentFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(event.target.files || []);
+        setIncidentFiles(prevFiles => [...prevFiles, ...files]);
+    };
+
+    const handleFraudFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(event.target.files || []);
+        setFraudFiles(prevFiles => [...prevFiles, ...files]);
+    };
+
+    const handleComplaintFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(event.target.files || []);
+        setComplaintFiles(prevFiles => [...prevFiles, ...files]);
+    };
+
 
     return (
         <div id={Id} className="w-4/5 max-md:w-full md:w-[90%] flex flex-col justify-center mx-auto">
@@ -148,8 +167,11 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
                                 setIsModalOpen(true);
                             }}
                         >
-                            {({ errors, touched, setFieldValue }) => (
-                                <Form className="space-y-4 bg-[#f9f8f4] p-5 rounded-[20px] shadow-lg">
+                            {({ errors, touched }) => (
+                                <Form className="space-y-4 bg-[#f9f8f4] p-5 rounded-[20px] shadow-lg" onSubmit={(e) => {
+                                    e.preventDefault()
+                                    setIsModalOpen(true)
+                                }}>
                                     {[
                                         { name: 'cityResidence', label: 'City of Residence' },
                                         { name: 'oppositeCityResidence', label: 'Opposite Party’s City of Residence' },
@@ -176,7 +198,6 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
                                     <div>
                                         <label className="block text-[16px] md:text-[18px] ps-[20px] font-normal text-[#3f3f3f]">Case or Incident Happened in City</label>
 
-
                                         <CustomDropdown options={options3} onOptionSelect={handleOptionSelect3} selectedOption={incident} placeholder={"Case or Incident Happened in City"} />
 
                                         {incident && (
@@ -194,45 +215,29 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
                                                             type="file"
                                                             id="incident-file"
                                                             name="incidentCityFile"
-                                                            onChange={(event) => {
-                                                                const file = event.target.files?.[0]; // Add null check here
-                                                                if (file) {
-                                                                    setFieldValue('incidentCityFile', file);
-                                                                    const reader = new FileReader();
-                                                                    reader.onloadend = () => {
-                                                                        setIncidentImagePreview(reader.result as string);
-                                                                    };
-                                                                    reader.readAsDataURL(file);
-                                                                }
-                                                            }}
+                                                            onChange={handleIncidentFileChange}
+                                                            multiple
                                                             style={{ display: 'none' }}
                                                         />
                                                     </div>
                                                     <div>
-                                                        {incidentImagePreview && (
+                                                        {incidentFiles.length > 0 && (
                                                             <div className="py-2 px-3 flex justify-center items-center rounded-full bg-white space-x-4 w-fit">
-                                                                <Image
-                                                                    width={1000}
-                                                                    height={1000}
-                                                                    src={incidentImagePreview}
-                                                                    alt="City Attachment Preview"
-                                                                    className="w-8 h-8 object-cover rounded-full"
-                                                                />
+                                                                <span className="text-[#3F3F3F] text-[16px] max-sm:text-[12px]">
+                                                                    {incidentFiles.length} file(s) uploaded
+                                                                </span>
                                                                 <button
                                                                     type="button"
                                                                     className="text-red-500 text-sm"
                                                                     onClick={() => {
-                                                                        setIncidentImagePreview(null);
-                                                                        setFieldValue('incidentCityFile', null);
+                                                                        setIncidentFiles([]); // Clear the files
                                                                     }}
                                                                 >
                                                                     X
                                                                 </button>
                                                             </div>
                                                         )}
-
                                                     </div>
-
                                                 </div>
                                                 {errors.incidentCityFile && touched.incidentCityFile && (
                                                     <div className="text-red-500 text-sm">{errors.incidentCityFile}</div>
@@ -240,10 +245,13 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
                                             </>
                                         )}
                                     </div>
+                                    {errors.incidentCityFile && touched.incidentCityFile && (
+                                        <div className="text-red-500 text-sm">{errors.incidentCityFile}</div>
+                                    )}
+
                                     {/* Fraud attachment section */}
                                     <div>
                                         <label className="block text-[16px] md:text-[18px] ps-[20px] font-normal text-[#3f3f3f]">Online Fraud or Others</label>
-
 
                                         <CustomDropdown options={options} onOptionSelect={handleOptionSelect} selectedOption={fraudselected} placeholder={"Online Fraud or Others"} />
 
@@ -262,45 +270,29 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
                                                             type="file"
                                                             id="fraud-file"
                                                             name="fraudFile"
-                                                            onChange={(event) => {
-                                                                const file = event.target.files?.[0]; // Add null check here
-                                                                if (file) {
-                                                                    setFieldValue('fraudFile', file);
-                                                                    const reader = new FileReader();
-                                                                    reader.onloadend = () => {
-                                                                        setFraudImagePreview(reader.result as string);
-                                                                    };
-                                                                    reader.readAsDataURL(file);
-                                                                }
-                                                            }}
+                                                            onChange={handleFraudFileChange}
+                                                            multiple
                                                             style={{ display: 'none' }}
                                                         />
                                                     </div>
                                                     <div>
-                                                        {fraudImagePreview && (
+                                                        {fraudFiles.length > 0 && (
                                                             <div className="py-2 px-3 flex justify-center items-center rounded-full bg-white space-x-4 w-fit">
-                                                                <Image
-                                                                    width={1000}
-                                                                    height={1000}
-                                                                    src={fraudImagePreview}
-                                                                    alt="Fraud Attachment Preview"
-                                                                    className="w-8 h-8 object-cover rounded-full"
-                                                                />
+                                                                <span className="text-[#3F3F3F] text-[16px] max-sm:text-[12px]">
+                                                                    {fraudFiles.length} file(s) uploaded
+                                                                </span>
                                                                 <button
                                                                     type="button"
                                                                     className="text-red-500 text-sm"
                                                                     onClick={() => {
-                                                                        setFraudImagePreview(null);
-                                                                        setFieldValue('fraudFile', null);
+                                                                        setFraudFiles([]); // Clear the files
                                                                     }}
                                                                 >
                                                                     X
                                                                 </button>
                                                             </div>
                                                         )}
-
                                                     </div>
-
                                                 </div>
                                                 {errors.fraudFile && touched.fraudFile && (
                                                     <div className="text-red-500 text-sm">{errors.fraudFile}</div>
@@ -308,26 +300,15 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
                                             </>
                                         )}
                                     </div>
+                                    {errors.fraudFile && touched.fraudFile && (
+                                        <div className="text-red-500 text-sm">{errors.fraudFile}</div>
+                                    )}
 
                                     {/* Complaint attachment section */}
                                     <div>
                                         <label className="block text-[16px] md:text-[18px] ps-[20px] font-normal text-[#3f3f3f] ">Have You Already Filled Complaint?</label>
                                         <CustomDropdown options={options2} onOptionSelect={handleOptionSelect2} selectedOption={fraudselected2} placeholder={"Have You Already Filled Complaint?"} />
-                                        {/* <button
-                                            type="button"
-                                            className="mt-1 p-3 w-full border border-[#CED4DA] bg-[#FFF] rounded-full flex justify-between items-center"
-                                            onClick={() => setShowComplaintAttachment((prev) => !prev)}
-                                        >
-                                            <div>
-                                                <p className='text-[#626a7b9f] px-2'>Complaint filed</p>
-                                            </div>
-                                            <div>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="9" viewBox="0 0 16 9" fill="none">
-                                                    <path d="M14.5947 0.219778L8 6.81453L1.40525 0.219778C1.11237 -0.0730967 0.637623 -0.0730967 0.344748 0.219778C0.0518728 0.512653 0.0518728 0.987403 0.344748 1.28028L7.46975 8.40528C7.61637 8.5519 7.808 8.62503 8 8.62503C8.192 8.62503 8.38362 8.5519 8.53025 8.40528L15.6552 1.28028C15.9481 0.987403 15.9481 0.512653 15.6552 0.219778C15.3624 -0.0730967 14.8876 -0.0730967 14.5947 0.219778Z" fill="#3F3F3F" />
-                                                </svg>
-                                            </div>
 
-                                        </button> */}
                                         {fraudselected2 && (
                                             <>
                                                 <div className='flex items-center gap-3 mt-5'>
@@ -343,36 +324,22 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
                                                             type="file"
                                                             id="complaint-file"
                                                             name="complaintFile"
-                                                            onChange={(event) => {
-                                                                const file = event.target.files?.[0]; // Add null check here
-                                                                if (file) {
-                                                                    setFieldValue('complaintFile', file);
-                                                                    const reader = new FileReader();
-                                                                    reader.onloadend = () => {
-                                                                        setComplaintImagePreview(reader.result as string);
-                                                                    };
-                                                                    reader.readAsDataURL(file);
-                                                                }
-                                                            }}
+                                                            onChange={handleComplaintFileChange}
+                                                            multiple
                                                             style={{ display: 'none' }}
                                                         />
                                                     </div>
-                                                    <div className=''>
-                                                        {complaintImagePreview && (
+                                                    <div>
+                                                        {complaintFiles.length > 0 && (
                                                             <div className="py-2 px-3 flex justify-center items-center rounded-full bg-white space-x-4 w-fit">
-                                                                <Image
-                                                                    width={1000}
-                                                                    height={1000}
-                                                                    src={complaintImagePreview}
-                                                                    alt="Complaint Attachment Preview"
-                                                                    className="w-8 h-8 object-cover rounded-full"
-                                                                />
+                                                                <span className="text-[#3F3F3F] text-[16px] max-sm:text-[12px]">
+                                                                    {complaintFiles.length} file(s) uploaded
+                                                                </span>
                                                                 <button
                                                                     type="button"
                                                                     className="text-red-500 text-sm"
                                                                     onClick={() => {
-                                                                        setComplaintImagePreview(null);
-                                                                        setFieldValue('complaintFile', null);
+                                                                        setComplaintFiles([]); // Clear the files
                                                                     }}
                                                                 >
                                                                     X
@@ -387,7 +354,9 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
                                             </>
                                         )}
                                     </div>
-
+                                    {errors.complaintFile && touched.complaintFile && (
+                                        <div className="text-red-500 text-sm">{errors.complaintFile}</div>
+                                    )}
                                     <div className='mt-2'>
                                         <label
                                             htmlFor="additionalInfo"
@@ -436,8 +405,6 @@ const Header: React.FC<HeaderProps> = ({ Id }) => {
 };
 
 export default Header;
-
-
 
 const CustomDropdown: React.FC<CustomDropdownProps> = ({ options, onOptionSelect, selectedOption, placeholder }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -488,7 +455,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ options, onOptionSelect
                         <div
                             key={index}
                             onClick={() => handleOptionSelect(option)}
-                            className="p-3 cursor-pointer hover:bg-gray-100 text-[#3F3F3F] first:rounded-t-lg last:rounded-b-lg"
+                            className="p-3 cursor-pointer hover:bg-gray-100 text-[# 3F3F3F] first:rounded-t-lg last:rounded-b-lg"
                         >
                             {option.label}
                         </div>

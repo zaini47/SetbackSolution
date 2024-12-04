@@ -163,14 +163,15 @@ const NestedModal: React.FC<NestedModalProps> = ({ isOpen, onClose }) => {
                     <Box
                         sx={{
                             display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-                            gap: { xs: 1, sm: 2, md: 2, lg: 2, },
+                            gap: { xs: 1, sm: 2, md: 2, lg: 2 },
                             justifyContent: 'center',
-                            [theme.breakpoints.up('lg')]: {
-                                gridTemplateColumns: 'repeat(4, 1fr)',
+                            gridTemplateColumns: {
+                              xs: 'repeat(2, 1fr)',
+                              sm: 'repeat(2, 1fr)', // Two columns at 'sm' breakpoint
+                              lg: 'repeat(4, 1fr)', // Four columns at 'lg' breakpoint
                             },
                             outline: 'none',
-                        }}
+                          }}
                     >
                         {cards.map((card) => (
                             <Box
@@ -190,7 +191,7 @@ const NestedModal: React.FC<NestedModalProps> = ({ isOpen, onClose }) => {
                                     createOrder(card.price as number)
                                 }}
                             >
-                                <p className="text-white py-2 px-6 sm:w-fit w-full sm:mx-auto  rounded-[30px] max-md:text-[16px] md:text-[20px] lg:text-[26px] 2xl:text-[28.638px] bg-[#CFAC62]">
+                                <p className="text-white py-2 px-6 sm:w-fit max-sm:w-fit w-full max-sm:mx-auto sm:mx-auto  rounded-[30px] max-md:text-[16px] md:text-[20px] lg:text-[26px] 2xl:text-[28.638px] bg-[#CFAC62]">
                                     {card.title}
                                 </p>
                                 <p className="text-[#CFAC62] text-[27px] max-md:text-[16px] md:text-[18px] lg:text-[20px] 2xl:text-[27px]">
